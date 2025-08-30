@@ -1,0 +1,31 @@
+# Maven
+/target/
+/pom.xml.tag
+/pom.xml.versionsBackup
+/pom.xml.releaseBackup
+/pom.xml.next
+pom.xml.backup
+release.properties
+dependency-reduced-pom.xml
+build/
+.mvn/wrapper/maven-wrapper.jar
+/log/
+*.log
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+
+# Spring Boot
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Outros
+.DS_Store
