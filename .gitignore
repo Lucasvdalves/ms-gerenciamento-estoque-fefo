@@ -1,0 +1,13 @@
+# Arquivos de build do Maven
+**/target/
+**/*.jar
+
+# Arquivos de IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Arquivos de sistema
+.DS_Store

@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # Serviço do RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" # Porta de comunicação
+      - "15672:15672" # Porta da interface de gerenciamento
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - estoque-network
+
+  # Microserviço 1: Ingestão de Dados
+  ingestao-dados:
+    build:
+      context: ./estoque-ingestao-dados # Aponta para a pasta do projeto
+      dockerfile: Dockerfile
+    container_name: ingestao-dados
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbitmq
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+    networks:
+      - estoque-network
+
+  # Microserviço 2: Processamento de Vendas (FEFO)
+  processamento-vendas:
+    build:
+      context: ./estoque-processamento-vendas
+      dockerfile: Dockerfile
+    container_name: processamento-vendas
+    ports:
+      - "8081:8081"
+    depends_on:
+      - rabbitmq
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+    networks:
+      - estoque-network
+
+  # Microserviço 3: Geração de Relatórios
+  gerador-relatorios:
+    build:
+      context: ./estoque-gerador-relatorios
+      dockerfile: Dockerfile
+    container_name: gerador-relatorios
+    ports:
+      - "8082:8082"
+    environment:
+      REPOSITORIO_VENDAS_HOST: ingestao-dados
+    networks:
+      - estoque-network
+
+# Define a rede interna para os containers
+networks:
+  estoque-network:
+    driver: bridge
